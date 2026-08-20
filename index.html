@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NexTopo — Deterministyczna Quad Retopologia dla Blendera</title>
+<title>NexTopo — Deterministic Quad Retopology for Blender</title>
 <style>
   :root{
     --bg:#0b0d10;
@@ -158,36 +158,36 @@
   <div class="wrap">
     <div class="logo">Nex<span>Topo</span></div>
     <ul>
-      <li><a href="#how">Jak to działa</a></li>
-      <li><a href="#determinism">Determinizm</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#determinism">Determinism</a></li>
       <li><a href="#status">Status</a></li>
-      <li><a href="#compat">Kompatybilność</a></li>
-      <li><a href="#about">O twórcy</a></li>
+      <li><a href="#compat">Compatibility</a></li>
+      <li><a href="#about">About</a></li>
     </ul>
-    <a href="#demo" class="cta-btn">Zobacz demo</a>
+    <a href="#demo" class="cta-btn">Watch Demo</a>
   </div>
 </nav>
 
 <header class="hero">
   <div class="wrap">
-    <span class="badge">Add-on do Blendera • C++20 core • w rozwoju</span>
-    <h1>Czysta topologia quad,<br><span class="grad">bez zgadywania</span></h1>
+    <span class="badge">Blender Add-on • C++20 Engine • Windows</span>
+    <h1>Clean quad topology,<br><span class="grad">without the guesswork</span></h1>
     <p class="sub">
-      NexTopo automatycznie przekształca surowe skany i modele sculptowane w schludną,
-      w pełni quadową topologię — z gwarancją identycznego wyniku dla tego samego seeda,
-      niezależnie od liczby wątków czy systemu operacyjnego.
+      NexTopo automatically converts raw scans and sculpted meshes into tidy,
+      fully quad-based topology — with a guarantee of an identical result for
+      the same seed, no matter how many CPU threads are used.
     </p>
     <div class="hero-actions">
-      <a href="#demo" class="btn-primary">Zobacz jak działa</a>
-      <a href="#status" class="btn-secondary">Status rozwoju</a>
+      <a href="#demo" class="btn-primary">See It In Action</a>
+      <a href="#status" class="btn-secondary">Development Status</a>
     </div>
 
     <div class="demo-frame" id="demo">
-      <!-- Zastąp poniższy placeholder osadzonym filmem YouTube/Vimeo, np.:
-           <iframe src="https://www.youtube.com/embed/TWOJE_ID" allowfullscreen></iframe> -->
+      <!-- Replace this placeholder with an embedded YouTube/Vimeo player, e.g.:
+           <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
       <div class="demo-placeholder">
-        🎬 Miejsce na demo wideo (osadź tutaj YouTube/Vimeo)<br>
-        <span style="font-size:0.8rem;">Pokaż input mesh → output quad w Blenderze</span>
+        🎬 Demo video placeholder (embed YouTube/Vimeo here)<br>
+        <span style="font-size:0.8rem;">Show the input mesh → quad output inside Blender</span>
       </div>
     </div>
   </div>
@@ -195,47 +195,47 @@
 
 <section id="how">
   <div class="wrap">
-    <div class="section-tag">Architektura</div>
-    <h2>Jak to działa</h2>
+    <div class="section-tag">Architecture</div>
+    <h2>How It Works</h2>
     <p class="section-desc">
-      NexTopo to proprietarny silnik C++20 działający jako niezależny proces,
-      który komunikuje się z open-source add-onem Blendera wyłącznie przez
-      wymianę plików / stdio — nigdy nie jest linkowany w tym samym procesie.
-      Dzięki temu silnik pozostaje w pełni odseparowany od licencji GPLv3 add-onu.
+      NexTopo runs as an independent C++20 engine process that communicates
+      with a Blender add-on purely through file and stdio exchange — never
+      linked in the same process. This keeps the engine fully decoupled from
+      Blender's own Python runtime.
     </p>
 
     <div class="arch-diagram">
       <div class="arch-box">
         <div class="tag">Blender 5.2 LTS</div>
-        <div class="name">Add-on (GPLv3)</div>
+        <div class="name">Add-on</div>
       </div>
       <div class="arch-arrow">⇄</div>
       <div class="arch-box">
         <div class="tag">Subprocess / IPC</div>
-        <div class="name">Plik + stdio</div>
+        <div class="name">File + stdio</div>
       </div>
       <div class="arch-arrow">⇄</div>
       <div class="arch-box">
-        <div class="tag">Proprietary</div>
-        <div class="name">Silnik C++20</div>
+        <div class="tag">Standalone</div>
+        <div class="name">C++20 Engine</div>
       </div>
     </div>
 
     <div class="grid-3">
       <div class="card">
         <div class="icon">🧩</div>
-        <h3>Pełna separacja procesów</h3>
-        <p>Silnik nigdy nie jest linkowany w procesie Blendera — komunikacja wyłącznie przez subprocess i pliki.</p>
+        <h3>Full Process Separation</h3>
+        <p>The engine is never linked into Blender's process — communication happens strictly through subprocess calls and files.</p>
       </div>
       <div class="card">
-        <div class="icon">🔒</div>
-        <h3>Bez zależności od CPython ABI</h3>
-        <p>Granica subprocess sprawia, że silnik jest niezależny od wersji ABI CPython używanej przez Blendera.</p>
+        <div class="icon">🎨</div>
+        <h3>Guided Authoring</h3>
+        <p>Paint directional guides, density, and symmetry directly in the viewport to steer the topology exactly where you need it.</p>
       </div>
       <div class="card">
         <div class="icon">🛰️</div>
-        <h3>Zero połączeń sieciowych</h3>
-        <p>Cała praca odbywa się lokalnie i offline — żadne dane mesha nigdy nie wychodzą z Twojego komputera.</p>
+        <h3>Fully Offline</h3>
+        <p>All processing happens locally on your machine — no mesh data ever leaves your computer.</p>
       </div>
     </div>
   </div>
@@ -243,88 +243,88 @@
 
 <section id="determinism">
   <div class="wrap">
-    <div class="section-tag">Kluczowa przewaga</div>
-    <h2>Determinizm jako twardy kontrakt</h2>
+    <div class="section-tag">Key Advantage</div>
+    <h2>Determinism as a Hard Guarantee</h2>
     <p class="section-desc">
-      Ten sam mesh wejściowy i ten sam seed dają zawsze identyczny, bit-exact wynik —
-      niezależnie od tego, czy renderujesz na 1, 4 czy wszystkich rdzeniach, i niezależnie
-      od tego, czy pracujesz na Windows czy Linux.
+      The same input mesh and the same seed always produce an identical,
+      bit-exact result — whether the engine runs on one thread or all
+      available cores.
     </p>
     <div class="grid-2">
       <div class="card">
         <div class="icon">🎯</div>
-        <h3>Powtarzalność produkcyjna</h3>
-        <p>Idealne do pipeline'ów zespołowych, gdzie wynik retopo musi być identyczny na każdej maszynie w studiu.</p>
+        <h3>Production-Grade Repeatability</h3>
+        <p>Built for team pipelines where the retopology result must be identical across every machine in the studio.</p>
       </div>
       <div class="card">
         <div class="icon">🧮</div>
-        <h3>Solver bez funkcji transcendentalnych</h3>
-        <p>Matematyka solvera używa wyłącznie dodawania, odejmowania, mnożenia i zaokrągleń — dzięki temu wynik jest przewidywalny na każdej platformie.</p>
+        <h3>Seed-Locked Solver</h3>
+        <p>Every run is seeded and single-threaded at the solver level, so the outcome never drifts between runs.</p>
       </div>
     </div>
     <div class="note">
-      💡 Determinizm to rzadka cecha w narzędziach do retopo — większość rozwiązań daje inny wynik przy każdym uruchomieniu.
+      💡 Determinism is a rare trait in retopology tools — most solutions return a slightly different result on every run.
     </div>
   </div>
 </section>
 
 <section id="status">
   <div class="wrap">
-    <div class="section-tag">Przejrzystość</div>
-    <h2>Status rozwoju</h2>
+    <div class="section-tag">Transparency</div>
+    <h2>Development Status</h2>
     <p class="section-desc">
-      NexTopo jest rozwijany w jasno zdefiniowanych etapach z twardymi kryteriami akceptacji (gate'ami).
-      Poniżej aktualny, szczery stan projektu — bez zaokrąglania w górę.
+      NexTopo is developed in clearly defined stages with strict acceptance
+      criteria. Below is the current, accurate state of the project.
     </p>
     <div class="status-list">
       <div class="status-row">
         <div>
-          <div class="stage-name">Etap 0 — Skeleton IPC</div>
-          <div class="stage-desc">Komunikacja add-on ⇄ silnik przez subprocess</div>
+          <div class="stage-name">Stage 0 — IPC Foundation</div>
+          <div class="stage-desc">Subprocess communication between the add-on and the engine</div>
         </div>
-        <span class="pill pill-ok">Zaliczony</span>
+        <span class="pill pill-ok">Complete</span>
       </div>
       <div class="status-row">
         <div>
-          <div class="stage-name">Etap 1 — Ingest / naprawa mesha</div>
-          <div class="stage-desc">Wczytywanie i wstępna naprawa geometrii wejściowej</div>
+          <div class="stage-name">Stage 1 — Mesh Ingestion &amp; Repair</div>
+          <div class="stage-desc">Loading and pre-repairing input geometry</div>
         </div>
-        <span class="pill pill-ok">Zaliczony</span>
+        <span class="pill pill-ok">Complete</span>
       </div>
       <div class="status-row">
         <div>
-          <div class="stage-name">Etap 2 — Pole krzyżowe 4-RoSy</div>
-          <div class="stage-desc">Wyznaczanie kierunków przepływu topologii</div>
+          <div class="stage-name">Stage 2 — Cross Field</div>
+          <div class="stage-desc">Computing topology flow direction across the surface</div>
         </div>
-        <span class="pill pill-ok">Zaliczony</span>
+        <span class="pill pill-ok">Complete</span>
       </div>
       <div class="status-row">
         <div>
-          <div class="stage-name">Etap 3 — Ekstrakcja quadów</div>
-          <div class="stage-desc">W aktywnym rozwoju — obecnie nie przechodzi wymaganych kryteriów jakości</div>
+          <div class="stage-name">Stage 3 — Quad Extraction</div>
+          <div class="stage-desc">Watertight, quad-dominant extraction with target count steering</div>
         </div>
-        <span class="pill pill-wip">W trakcie</span>
+        <span class="pill pill-ok">Complete</span>
       </div>
       <div class="status-row">
         <div>
-          <div class="stage-name">Etap 4 — Ograniczenia / malowanie</div>
-          <div class="stage-desc">Ręczna kontrola nad przepływem topologii</div>
+          <div class="stage-name">Stage 4 — Guided Authoring</div>
+          <div class="stage-desc">Directional guides, density painting, symmetry, live preview, freehand brush</div>
         </div>
-        <span class="pill pill-queued">W kolejce</span>
+        <span class="pill pill-ok">Complete</span>
       </div>
       <div class="status-row">
         <div>
-          <div class="stage-name">Etap 5 — Presety</div>
-          <div class="stage-desc">Gotowe konfiguracje dla typowych przypadków użycia</div>
+          <div class="stage-name">Stage 5 — Presets</div>
+          <div class="stage-desc">Organic, Hard-surface, Scan Cleanup, and Game-ready presets</div>
         </div>
-        <span class="pill pill-queued">W kolejce</span>
+        <span class="pill pill-ok">Complete</span>
       </div>
       <div class="status-row">
         <div>
-          <div class="stage-name">Etap 6 — Packaging</div>
-          <div class="stage-desc">Finalne pakowanie do dystrybucji</div>
+          <div class="stage-name">Stage 6 — Packaging</div>
+          <div class="stage-desc">Final build verification and release preparation</div>
         </div>
-        <span class="pill pill-queued">W kolejce</span>
+        <span class="pill pill-wip">In Progress</span>
       </div>
     </div>
   </div>
@@ -332,20 +332,19 @@
 
 <section id="compat">
   <div class="wrap">
-    <div class="section-tag">Wymagania</div>
-    <h2>Kompatybilność i dystrybucja</h2>
+    <div class="section-tag">Requirements</div>
+    <h2>Compatibility</h2>
     <div class="grid-2">
       <ul class="compat-list">
-        <li>Blender 5.2 LTS (wersja docelowa)</li>
-        <li>Minimalna wersja: Blender 4.2.0</li>
-        <li>Windows i Linux</li>
-        <li>Praca w pełni offline, zero telemetrii i połączeń sieciowych</li>
+        <li>Blender 5.2 LTS (target version)</li>
+        <li>Minimum supported version: Blender 4.2.0</li>
+        <li>Windows only</li>
       </ul>
       <ul class="compat-list">
-        <li>Licencja wieczysta (jednorazowy zakup)</li>
-        <li>Dystrybucja wyłącznie przez Superhive / Gumroad</li>
-        <li>Brak zależności od zewnętrznych serwerów</li>
-        <li>Regularne aktualizacje w kolejnych etapach rozwoju</li>
+        <li>Fully offline processing, no network calls</li>
+        <li>Bit-identical output across thread counts</li>
+        <li>Guided authoring: directional guides, density, symmetry</li>
+        <li>Built-in presets for common workflows</li>
       </ul>
     </div>
   </div>
@@ -353,14 +352,17 @@
 
 <section id="about" style="border-bottom:none;">
   <div class="wrap">
-    <div class="section-tag">Twórca</div>
-    <h2>O twórcy</h2>
-    <p class="section-desc" style="margin-bottom:0;">
-      NexTopo jest rozwijany przez dewelopera z doświadczeniem w C#/.NET, Pythonie
-      i programowaniu gier, aktywnie pracującego również nad narzędziami dla symulacji
-      lotniczej oraz walidacji i optymalizacji assetów 3D w Blenderze. Projekt powstaje
-      z naciskiem na inżynieryjną rzetelność: jasne kryteria akceptacji, udokumentowane
-      decyzje architektoniczne i przejrzyste raportowanie postępów.
+    <div class="section-tag">Creator</div>
+    <h2>About</h2>
+    <p class="section-desc" style="margin-bottom:24px;">
+      NexTopo is developed by Dawid Gerula, a software developer focused on
+      building precise, production-grade tools for 3D artists. The project is
+      built with an engineering-first mindset: clear acceptance criteria,
+      documented architectural decisions, and honest, transparent progress
+      reporting at every stage.
+    </p>
+    <p style="font-size:0.95rem;">
+      <a href="https://www.linkedin.com/in/dawid-gerula/" target="_blank" rel="noopener">Connect on LinkedIn →</a>
     </p>
   </div>
 </section>
@@ -368,10 +370,10 @@
 <footer>
   <div class="footer-links">
     <a href="#demo">Demo</a>
-    <a href="#status">Status rozwoju</a>
-    <a href="#compat">Kompatybilność</a>
+    <a href="#status">Development Status</a>
+    <a href="#compat">Compatibility</a>
   </div>
-  <div>© 2026 NexTopo. Wszystkie prawa zastrzeżone.</div>
+  <div>© 2026 NexTopo. All rights reserved.</div>
 </footer>
 
 </body>
