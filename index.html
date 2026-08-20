@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexTopo — Deterministyczna Quad Retopologia dla Blendera</title>
+<style>
+  :root{
+    --bg:#0b0d10;
+    --bg-alt:#12151a;
+    --card:#161a20;
+    --border:#242a33;
+    --text:#e8eaed;
+    --muted:#9aa4b2;
+    --accent:#4dd0e1;
+    --accent2:#7c5cff;
+    --ok:#5ee6a0;
+    --wip:#ffb454;
+    --queued:#5a6472;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,13,16,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .logo{font-weight:700;font-size:1.2rem;letter-spacing:0.5px;}
+  .logo span{color:var(--accent);}
+  nav ul{display:flex;gap:28px;list-style:none;font-size:0.92rem;color:var(--muted);}
+  nav ul a{color:var(--muted);}
+  nav ul a:hover{color:var(--text);text-decoration:none;}
+  .cta-btn{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#0b0d10;padding:8px 18px;border-radius:8px;font-weight:600;font-size:0.9rem;
+  }
+  .cta-btn:hover{opacity:0.9;text-decoration:none;}
+
+  header.hero{
+    padding:100px 0 80px;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(124,92,255,0.15), transparent 40%),
+      radial-gradient(circle at 80% 10%, rgba(77,208,225,0.12), transparent 40%);
+    text-align:center;
+  }
+  .badge{
+    display:inline-block;padding:6px 14px;border:1px solid var(--border);
+    border-radius:999px;font-size:0.78rem;color:var(--muted);margin-bottom:24px;
+    background:var(--card);
+  }
+  h1{font-size:3rem;font-weight:800;letter-spacing:-1px;margin-bottom:18px;}
+  h1 .grad{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.sub{
+    max-width:620px;margin:0 auto 36px;color:var(--muted);font-size:1.15rem;
+  }
+  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#0b0d10;padding:14px 28px;border-radius:10px;font-weight:700;font-size:0.95rem;
+  }
+  .btn-primary:hover{text-decoration:none;opacity:0.92;}
+  .btn-secondary{
+    border:1px solid var(--border);padding:14px 28px;border-radius:10px;
+    color:var(--text);font-weight:600;font-size:0.95rem;
+  }
+  .btn-secondary:hover{text-decoration:none;border-color:var(--accent);}
+
+  .demo-frame{
+    max-width:900px;margin:56px auto 0;border-radius:16px;overflow:hidden;
+    border:1px solid var(--border);box-shadow:0 30px 80px -20px rgba(0,0,0,0.6);
+    background:var(--bg-alt);aspect-ratio:16/9;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .demo-frame iframe{width:100%;height:100%;border:0;}
+  .demo-placeholder{color:var(--muted);font-size:0.9rem;text-align:center;padding:40px;}
+
+  section{padding:90px 0;border-bottom:1px solid var(--border);}
+  .section-tag{
+    color:var(--accent);text-transform:uppercase;font-size:0.8rem;
+    letter-spacing:1.5px;font-weight:700;margin-bottom:12px;
+  }
+  h2{font-size:2.1rem;font-weight:800;margin-bottom:16px;letter-spacing:-0.5px;}
+  .section-desc{color:var(--muted);max-width:640px;margin-bottom:48px;font-size:1.05rem;}
+
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+  @media(max-width:800px){.grid-3,.grid-2{grid-template-columns:1fr;}}
+
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:28px;
+  }
+  .card .icon{
+    width:42px;height:42px;border-radius:10px;
+    background:linear-gradient(135deg,rgba(77,208,225,0.2),rgba(124,92,255,0.2));
+    display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px;
+  }
+  .card h3{font-size:1.1rem;margin-bottom:10px;font-weight:700;}
+  .card p{color:var(--muted);font-size:0.95rem;}
+
+  .arch-diagram{
+    display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;
+    padding:36px;background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;margin-bottom:40px;
+  }
+  .arch-box{
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+    padding:18px 22px;text-align:center;min-width:150px;
+  }
+  .arch-box .tag{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .arch-box .name{font-weight:700;margin-top:4px;}
+  .arch-arrow{color:var(--muted);font-size:1.4rem;}
+
+  .status-list{display:flex;flex-direction:column;gap:12px;}
+  .status-row{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+    padding:16px 22px;
+  }
+  .status-row .stage-name{font-weight:600;}
+  .status-row .stage-desc{color:var(--muted);font-size:0.88rem;margin-top:2px;}
+  .pill{padding:5px 14px;border-radius:999px;font-size:0.78rem;font-weight:700;white-space:nowrap;}
+  .pill-ok{background:rgba(94,230,160,0.15);color:var(--ok);}
+  .pill-wip{background:rgba(255,180,84,0.15);color:var(--wip);}
+  .pill-queued{background:rgba(90,100,114,0.2);color:var(--queued);}
+
+  .compat-list{list-style:none;color:var(--muted);}
+  .compat-list li{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;}
+  .compat-list li:last-child{border-bottom:none;}
+  .compat-list li::before{content:"✓";color:var(--ok);font-weight:700;}
+
+  footer{padding:50px 0;text-align:center;color:var(--muted);font-size:0.9rem;}
+  footer a{color:var(--muted);}
+  .footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+
+  .note{
+    background:var(--bg-alt);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;padding:16px 20px;color:var(--muted);font-size:0.9rem;margin-top:32px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">Nex<span>Topo</span></div>
+    <ul>
+      <li><a href="#how">Jak to działa</a></li>
+      <li><a href="#determinism">Determinizm</a></li>
+      <li><a href="#status">Status</a></li>
+      <li><a href="#compat">Kompatybilność</a></li>
+      <li><a href="#about">O twórcy</a></li>
+    </ul>
+    <a href="#demo" class="cta-btn">Zobacz demo</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="badge">Add-on do Blendera • C++20 core • w rozwoju</span>
+    <h1>Czysta topologia quad,<br><span class="grad">bez zgadywania</span></h1>
+    <p class="sub">
+      NexTopo automatycznie przekształca surowe skany i modele sculptowane w schludną,
+      w pełni quadową topologię — z gwarancją identycznego wyniku dla tego samego seeda,
+      niezależnie od liczby wątków czy systemu operacyjnego.
+    </p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn-primary">Zobacz jak działa</a>
+      <a href="#status" class="btn-secondary">Status rozwoju</a>
+    </div>
+
+    <div class="demo-frame" id="demo">
+      <!-- Zastąp poniższy placeholder osadzonym filmem YouTube/Vimeo, np.:
+           <iframe src="https://www.youtube.com/embed/TWOJE_ID" allowfullscreen></iframe> -->
+      <div class="demo-placeholder">
+        🎬 Miejsce na demo wideo (osadź tutaj YouTube/Vimeo)<br>
+        <span style="font-size:0.8rem;">Pokaż input mesh → output quad w Blenderze</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-tag">Architektura</div>
+    <h2>Jak to działa</h2>
+    <p class="section-desc">
+      NexTopo to proprietarny silnik C++20 działający jako niezależny proces,
+      który komunikuje się z open-source add-onem Blendera wyłącznie przez
+      wymianę plików / stdio — nigdy nie jest linkowany w tym samym procesie.
+      Dzięki temu silnik pozostaje w pełni odseparowany od licencji GPLv3 add-onu.
+    </p>
+
+    <div class="arch-diagram">
+      <div class="arch-box">
+        <div class="tag">Blender 5.2 LTS</div>
+        <div class="name">Add-on (GPLv3)</div>
+      </div>
+      <div class="arch-arrow">⇄</div>
+      <div class="arch-box">
+        <div class="tag">Subprocess / IPC</div>
+        <div class="name">Plik + stdio</div>
+      </div>
+      <div class="arch-arrow">⇄</div>
+      <div class="arch-box">
+        <div class="tag">Proprietary</div>
+        <div class="name">Silnik C++20</div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="icon">🧩</div>
+        <h3>Pełna separacja procesów</h3>
+        <p>Silnik nigdy nie jest linkowany w procesie Blendera — komunikacja wyłącznie przez subprocess i pliki.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🔒</div>
+        <h3>Bez zależności od CPython ABI</h3>
+        <p>Granica subprocess sprawia, że silnik jest niezależny od wersji ABI CPython używanej przez Blendera.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🛰️</div>
+        <h3>Zero połączeń sieciowych</h3>
+        <p>Cała praca odbywa się lokalnie i offline — żadne dane mesha nigdy nie wychodzą z Twojego komputera.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="determinism">
+  <div class="wrap">
+    <div class="section-tag">Kluczowa przewaga</div>
+    <h2>Determinizm jako twardy kontrakt</h2>
+    <p class="section-desc">
+      Ten sam mesh wejściowy i ten sam seed dają zawsze identyczny, bit-exact wynik —
+      niezależnie od tego, czy renderujesz na 1, 4 czy wszystkich rdzeniach, i niezależnie
+      od tego, czy pracujesz na Windows czy Linux.
+    </p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="icon">🎯</div>
+        <h3>Powtarzalność produkcyjna</h3>
+        <p>Idealne do pipeline'ów zespołowych, gdzie wynik retopo musi być identyczny na każdej maszynie w studiu.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🧮</div>
+        <h3>Solver bez funkcji transcendentalnych</h3>
+        <p>Matematyka solvera używa wyłącznie dodawania, odejmowania, mnożenia i zaokrągleń — dzięki temu wynik jest przewidywalny na każdej platformie.</p>
+      </div>
+    </div>
+    <div class="note">
+      💡 Determinizm to rzadka cecha w narzędziach do retopo — większość rozwiązań daje inny wynik przy każdym uruchomieniu.
+    </div>
+  </div>
+</section>
+
+<section id="status">
+  <div class="wrap">
+    <div class="section-tag">Przejrzystość</div>
+    <h2>Status rozwoju</h2>
+    <p class="section-desc">
+      NexTopo jest rozwijany w jasno zdefiniowanych etapach z twardymi kryteriami akceptacji (gate'ami).
+      Poniżej aktualny, szczery stan projektu — bez zaokrąglania w górę.
+    </p>
+    <div class="status-list">
+      <div class="status-row">
+        <div>
+          <div class="stage-name">Etap 0 — Skeleton IPC</div>
+          <div class="stage-desc">Komunikacja add-on ⇄ silnik przez subprocess</div>
+        </div>
+        <span class="pill pill-ok">Zaliczony</span>
+      </div>
+      <div class="status-row">
+        <div>
+          <div class="stage-name">Etap 1 — Ingest / naprawa mesha</div>
+          <div class="stage-desc">Wczytywanie i wstępna naprawa geometrii wejściowej</div>
+        </div>
+        <span class="pill pill-ok">Zaliczony</span>
+      </div>
+      <div class="status-row">
+        <div>
+          <div class="stage-name">Etap 2 — Pole krzyżowe 4-RoSy</div>
+          <div class="stage-desc">Wyznaczanie kierunków przepływu topologii</div>
+        </div>
+        <span class="pill pill-ok">Zaliczony</span>
+      </div>
+      <div class="status-row">
+        <div>
+          <div class="stage-name">Etap 3 — Ekstrakcja quadów</div>
+          <div class="stage-desc">W aktywnym rozwoju — obecnie nie przechodzi wymaganych kryteriów jakości</div>
+        </div>
+        <span class="pill pill-wip">W trakcie</span>
+      </div>
+      <div class="status-row">
+        <div>
+          <div class="stage-name">Etap 4 — Ograniczenia / malowanie</div>
+          <div class="stage-desc">Ręczna kontrola nad przepływem topologii</div>
+        </div>
+        <span class="pill pill-queued">W kolejce</span>
+      </div>
+      <div class="status-row">
+        <div>
+          <div class="stage-name">Etap 5 — Presety</div>
+          <div class="stage-desc">Gotowe konfiguracje dla typowych przypadków użycia</div>
+        </div>
+        <span class="pill pill-queued">W kolejce</span>
+      </div>
+      <div class="status-row">
+        <div>
+          <div class="stage-name">Etap 6 — Packaging</div>
+          <div class="stage-desc">Finalne pakowanie do dystrybucji</div>
+        </div>
+        <span class="pill pill-queued">W kolejce</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="compat">
+  <div class="wrap">
+    <div class="section-tag">Wymagania</div>
+    <h2>Kompatybilność i dystrybucja</h2>
+    <div class="grid-2">
+      <ul class="compat-list">
+        <li>Blender 5.2 LTS (wersja docelowa)</li>
+        <li>Minimalna wersja: Blender 4.2.0</li>
+        <li>Windows i Linux</li>
+        <li>Praca w pełni offline, zero telemetrii i połączeń sieciowych</li>
+      </ul>
+      <ul class="compat-list">
+        <li>Licencja wieczysta (jednorazowy zakup)</li>
+        <li>Dystrybucja wyłącznie przez Superhive / Gumroad</li>
+        <li>Brak zależności od zewnętrznych serwerów</li>
+        <li>Regularne aktualizacje w kolejnych etapach rozwoju</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="about" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="section-tag">Twórca</div>
+    <h2>O twórcy</h2>
+    <p class="section-desc" style="margin-bottom:0;">
+      NexTopo jest rozwijany przez dewelopera z doświadczeniem w C#/.NET, Pythonie
+      i programowaniu gier, aktywnie pracującego również nad narzędziami dla symulacji
+      lotniczej oraz walidacji i optymalizacji assetów 3D w Blenderze. Projekt powstaje
+      z naciskiem na inżynieryjną rzetelność: jasne kryteria akceptacji, udokumentowane
+      decyzje architektoniczne i przejrzyste raportowanie postępów.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="#demo">Demo</a>
+    <a href="#status">Status rozwoju</a>
+    <a href="#compat">Kompatybilność</a>
+  </div>
+  <div>© 2026 NexTopo. Wszystkie prawa zastrzeżone.</div>
+</footer>
+
+</body>
+</html>
