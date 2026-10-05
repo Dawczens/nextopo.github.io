@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NexTopo - automatic quad remeshing for Blender</title>
+<meta name="description" content="NexTopo: one-click quad remeshing for Blender. Even edge flow, multi-part models remeshed part by part, repair-first, and an engine that runs outside Blender. Windows, one-time purchase, fully offline.">
+<meta property="og:title" content="NexTopo - automatic quad remeshing for Blender">
+<meta property="og:description" content="Clean quad topology from sculpts, scans and hard-surface props.">
+<meta property="og:image" content="https://dawczens.github.io/nextopo.github.io/media/hero-suzanne.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0d10'/%3E%3Cpath d='M8 8h16v16H8z M8 16h16 M16 8v16' stroke='%234dd0e1' stroke-width='2.2' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d10;--bg2:#12151a;--card:#161a20;--line:#242a33;--ink:#e8eaed;--ink2:#9aa4b2;--acc:#4dd0e1;--acc2:#7c5cff;--ok:#5ee6a0}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,'Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+a{color:var(--acc)}kbd{font:600 .85em Inter,system-ui;padding:1px 7px;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;background:var(--card)}
+code{background:var(--card);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
+header{padding:64px 16px 44px;text-align:center;background:radial-gradient(circle at 20% 15%,rgba(124,92,255,.16),transparent 42%),radial-gradient(circle at 80% 5%,rgba(77,208,225,.13),transparent 42%)}
+.logo{font-size:clamp(2.6rem,7vw,4rem);font-weight:800;letter-spacing:-1.5px;margin:0}
+.logo span{background:linear-gradient(135deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+header p.tag{font-size:clamp(1.05rem,2.6vw,1.3rem);color:var(--ink2);margin:10px auto 22px;max-width:760px}
+.chips span{display:inline-block;margin:4px;padding:6px 16px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:.92rem}
+.cta{margin-top:26px}.cta a{display:inline-block;margin:6px;padding:12px 26px;border-radius:12px;font-weight:600;text-decoration:none}
+.cta .p{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0b0d10}.cta .s{border:1px solid var(--line);color:var(--ink)}
+.cta .s:hover{border-color:var(--acc)}
+.hero-media{max-width:960px;margin:36px auto 0}
+nav{position:sticky;top:0;z-index:5;background:rgba(11,13,16,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;padding:10px 16px;text-align:center}
+nav a{margin:0 10px;text-decoration:none;font-weight:600;font-size:.92rem;color:var(--ink2)}nav a:hover{color:var(--ink)}
+main{max-width:1120px;margin:0 auto;padding:0 16px 60px}
+h2{font-size:1.8rem;margin:0 0 8px;display:flex;gap:12px;align-items:center;letter-spacing:-.4px}h3{margin:18px 0 6px}
+.ic{display:inline-grid;place-items:center;flex:none;width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(77,208,225,.2),rgba(124,92,255,.2));color:var(--acc);font-size:1.25rem}
+section{scroll-margin-top:56px;padding:48px 0 8px;border-bottom:1px solid var(--line)}
+.lead{font-size:1.1rem;color:var(--ink2);max-width:860px}
+.media{display:grid;gap:16px;margin:18px 0}.media.m2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+figure{margin:0}video{width:100%;height:auto;border-radius:14px;border:1px solid var(--line);display:block;background:var(--bg2)}
+figcaption{font-size:.9rem;color:var(--ink2);margin-top:6px}
+figure.sq{max-width:620px;margin:0 auto}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px}
+table{width:100%;border-collapse:collapse;font-size:.95rem}th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}th{width:34%;color:var(--acc);font-weight:600}
+.ed th{width:auto}.ed td,.ed th{text-align:center}.ed td:first-child,.ed th:first-child{text-align:left}
+.note{background:var(--bg2);border-left:4px solid var(--acc);padding:10px 14px;border-radius:8px;color:var(--ink2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}.card h3{margin-top:0;color:var(--acc)}.card p{color:var(--ink2);margin:0}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0}summary{font-weight:600;cursor:pointer}details p{color:var(--ink2)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:28px 0 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;color:var(--ink2)}.stat b{display:block;font-size:1.7rem;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+footer{text-align:center;padding:30px 16px;color:var(--ink2);font-size:.9rem}footer a{color:var(--ink2)}
+</style></head><body>
+<header>
+<h1 class="logo">Nex<span>Topo</span></h1>
+<p class="tag">Clean quad topology from sculpts, scans and hard-surface props. The engine runs outside Blender, so a hard mesh can't take your scene down.</p>
+<div class="chips"><span>One-click Flow engine</span><span>Part by part</span><span>Repair first</span><span>Preview &amp; accept</span><span>Fully offline</span></div>
+<div class="cta"><a class="p" href="https://superhivemarket.com/">Get it on Superhive</a><a class="s" href="#quick-start">Quick start</a><a class="s" href="#editions">Free edition</a></div>
+<figure class="hero-media"><video src="media/hero-suzanne.mp4" poster="media/hero-suzanne.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Input on the left, the Flow result on the right. One click, default settings.</figcaption></figure>
+</header>
+<nav><a href="#quick-start">Quick start</a><a href="#flow">Flow</a><a href="#parts">Multi-part models</a><a href="#hard-surface">Hard surface</a><a href="#sculpts">Sculpts</a><a href="#workflow">Workflow</a><a href="#advanced">Advanced</a><a href="#editions">Editions</a><a href="#faq">FAQ</a><a href="#compat">Compatibility</a></nav>
+<main>
+<div class="stats">
+<div class="stat"><b>98.8 – 100 %</b>quads across our 13-model test set</div>
+<div class="stat"><b>0</b>new holes on that same test set</div>
+<div class="stat"><b>1 click</b>select, set a quad count, Remesh</div>
+<div class="stat"><b>4.2 – 5.2</b>Blender LTS versions · Windows x64</div>
+</div>
+
+<section id="quick-start"><h2><span class="ic">▶</span>Quick start</h2>
+<div class="cols"><div><h3>Install</h3><ol><li>Download <code>nextopo-1.0.0-windows-x64.zip</code>. Don't unzip it.</li><li>In Blender go to <b>Edit → Preferences → Get Extensions</b>, open the <b>▾</b> menu at the top right and choose <b>Install from Disk…</b></li><li>Pick the zip. The remesh engine is inside it: nothing else to install, no path to set.</li></ol>
+<p class="note">The first time the engine runs, Windows SmartScreen may warn that the program is new and unsigned. Choose <b>More info → Run anyway</b>, once.</p></div>
+<div><h3>First remesh</h3><ol><li>Select a mesh in <b>Object Mode</b>.</li><li>Press <kbd>N</kbd> in the 3D Viewport and open the <b>NexTopo</b> tab.</li><li>Set <b>Target Quads</b> to roughly the density you want and click <b>Remesh</b>.</li><li>The result arrives as a preview. Click <b>Accept</b> to keep it or <b>Discard</b> to throw it away.</li></ol></div></div>
+</section>
+
+<section id="flow"><h2><span class="ic">⚡</span>Flow - the one-click engine</h2>
+<p class="lead">Flow, the default engine, lays quads along the shape of the surface at an even density. It chooses its own settings, so there is nothing to tune: set roughly how many quads you want and press Remesh.</p>
+<div class="media"><figure><video src="media/flow-dagger.mp4" poster="media/flow-dagger.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Fantasy dagger, target 5,000: the loops follow the blade, the guard and the hooks.</figcaption></figure></div>
+<div class="cols"><div><h3>How to use</h3><ol><li>Select the mesh and set <b>Target Quads</b>.</li><li>Click <b>Remesh</b>. Progress shows in the panel; <kbd>Esc</kbd> or <b>Cancel</b> stops it cleanly.</li><li>Look at the preview and the <b>Last result</b> box: face count and quad share.</li><li>Not right? Change the count and press <b>Remesh Again</b>. The preview is replaced, no undo needed.</li></ol></div>
+<div><h3>Options</h3><table><tr><th>Target Quads</th><td>Roughly how many faces you want. Flow retries toward it on its own.</td></tr><tr><th>Engine</th><td><b>Flow</b> (default), or QuadriFlow / Feature-line for manual control (see <a href="#advanced">Advanced</a>).</td></tr><tr><th>Preview Result</th><td>On by default. Off applies the result directly.</td></tr><tr><th>Use Modifiers</th><td>Remesh the mesh with its modifier stack applied.</td></tr><tr><th>Symmetry</th><td>Remesh one half about a local axis and mirror it, for an exactly symmetric result.</td></tr></table></div></div>
+</section>
+
+<section id="parts"><h2><span class="ic">⧉</span>Multi-part models, part by part</h2>
+<p class="lead">A prop is rarely one closed surface. Every separate piece gets its own remesh and its own share of the quad budget, so small parts such as buttons, rivets and straps come out as quads instead of being swallowed. Identical copies, such as a pair of eyes or two matching skulls, get identical topology.</p>
+<div class="media"><figure><video src="media/parts-gamepad.mp4" poster="media/parts-gamepad.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Gamepad (Poly Haven, CC0), target 3,000: body, buttons and the long cable, each remeshed on its own budget.</figcaption></figure></div>
+<p class="note">The count is a target, not a guarantee. On models with many small parts Flow may spend more quads than asked so those parts stay intact.</p>
+</section>
+
+<section id="hard-surface"><h2><span class="ic">▦</span>Hard surface</h2>
+<p class="lead">On mechanical models each part may switch to the engine that keeps its edges best, but only when that result is sound: no new hole, nothing cut off, and clearly better on a quality check.</p>
+<div class="media"><figure class="sq"><video src="media/turn-bracket.mp4" poster="media/turn-bracket.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Holed CAD bracket, target 2,000: flat faces, crisp edges, loops around both holes.</figcaption></figure></div>
+</section>
+
+<section id="sculpts"><h2><span class="ic">◐</span>Sculpts and game assets</h2>
+<p class="lead">Organic and stylised models get even, flowing quads that are ready for subdivision, rigging or a game engine.</p>
+<div class="media"><figure><video src="media/flow-katana.mp4" poster="media/flow-katana.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Inferno Kaen katana, target 5,000: a low-poly game asset rebuilt as even quads along the blade and the guard.</figcaption></figure></div>
+</section>
+
+<section id="workflow"><h2><span class="ic">✔</span>Built not to get in your way</h2>
+<div class="grid">
+<div class="card"><h3>Runs outside Blender</h3><p>The solver is a separate program. A mesh that defeats it returns an error instead of taking your unsaved scene down with it.</p></div>
+<div class="card"><h3>Repair first</h3><p>Non-manifold edges, inconsistent normals, near-duplicate vertices and small cracks are repaired before the remesh, so real-world input works. Openings you modelled on purpose stay open.</p></div>
+<div class="card"><h3>Preview, then decide</h3><p>The original stays hidden under the preview. Accept keeps the result as a new object; Discard brings the original back.</p></div>
+<div class="card"><h3>Your data carried over</h3><p>Material slots, per-face material assignment and smooth/flat shading come across to the new mesh.</p></div>
+<div class="card"><h3>Repeatable</h3><p>The same mesh with the same settings gives the same result every time on your machine, however many CPU cores it uses.</p></div>
+<div class="card"><h3>Fully offline</h3><p>No account, no activation, no licence server. The add-on makes no network connections, and your meshes never leave your computer.</p></div>
+<div class="card"><h3>Survives Blender updates</h3><p>The add-on is pure Python and the engine is a standalone program, so one install covers Blender 4.2 through 5.2.</p></div>
+<div class="card"><h3>Bake Base Color</h3><p>After a remesh, bake the original's base colour onto the result as a new texture (needs Cycles).</p></div>
+</div>
+</section>
+
+<section id="advanced"><h2><span class="ic">✎</span>Advanced: steer it by hand</h2>
+<p class="lead">Switch <b>Options → Engine</b> to <b>QuadriFlow</b> or <b>Feature-line</b> and you get the full set of controls: presets, hard-edge preservation with an adjustable angle, match-target refinement, and the painting tools. Flow is automatic and does not read paint.</p>
+<div class="cols"><div><h3>How to use</h3><ol><li>Open <b>Options</b> and set <b>Engine</b> to QuadriFlow or Feature-line.</li><li>Pick a <b>Preset</b>: Organic / Sculpt, Hard-surface / CAD, Scan Cleanup or Game-ready.</li><li>Remesh once, then open <b>Advanced: Refine (paint)</b> where the flow is wrong.</li><li>Paint, then <b>Remesh Again</b>.</li></ol></div>
+<div><h3>Painting tools (full edition)</h3><table><tr><th>Guide edges</th><td>In Edit Mode, select edges that show the flow you want and click <b>Set Guides</b>.</td></tr><tr><th>Freehand brush</th><td>Drag on the surface in Object Mode to paint flow direction or density. <kbd>[</kbd> <kbd>]</kbd> change the radius.</td></tr><tr><th>Density paint</th><td>Select vertices and click <b>Set Density</b> to make that region finer than the rest.</td></tr><tr><th>Symmetry</th><td>Mirror what you paint across X, Y, Z or any combination.</td></tr></table></div></div>
+</section>
+
+<section id="editions"><h2><span class="ic">＋</span>Free and full editions</h2>
+<p class="lead">Two downloads, no licence key, no activation, no expiry. <b>NexTopo Free</b> is the same add-on and the same engine with two limits. At or below 5,000 quads both produce byte-for-byte the same result.</p>
+<table class="ed"><tr><th></th><th>Free</th><th>Full</th></tr>
+<tr><td>Output quads</td><td>up to 5,000</td><td>unlimited</td></tr>
+<tr><td>Guide edges, freehand brush, density paint</td><td>-</td><td>✓</td></tr>
+<tr><td>Flow, repair, presets, preview, materials, symmetry</td><td>✓</td><td>✓</td></tr>
+<tr><td>Commercial use of your results</td><td>✓</td><td>✓</td></tr></table>
+<p>Installing the full zip replaces the free one in place; your preferences and painted attributes are kept.</p>
+</section>
+
+<section id="faq"><h2><span class="ic">?</span>FAQ</h2>
+<details><summary>How is this different from Blender's built-in QuadriFlow remesh?</summary><p>The built-in remesher refuses a lot of real geometry: non-manifold input, inconsistent normals, near-duplicate vertices. NexTopo repairs the mesh first, remeshes each separate part on its own budget, previews the result before replacing anything, and carries materials and shading across.</p></details>
+<details><summary>Is it all quads?</summary><p>Almost: 98.8 to 100 % quads across our 13-model test set. The rest is a handful of other faces where the layout needs them.</p></details>
+<details><summary>Can I paint where the edge loops go?</summary><p>Yes, on the QuadriFlow and Feature-line engines, in the full edition. The default Flow engine is automatic and does not read paint.</p></details>
+<details><summary>Will my UVs survive?</summary><p>Don't count on them. A remesh replaces the topology your UVs were built on, so plan to re-unwrap or re-bake for production. Materials and shading do survive.</p></details>
+<details><summary>Does it need an internet connection?</summary><p>No: not to install, not to activate, not to run.</p></details>
+<details><summary>Is it a subscription?</summary><p>No. One-time purchase, perpetual, and you may use the results in commercial work.</p></details>
+<details><summary>macOS or Linux?</summary><p>Not in this release. Windows x64 only.</p></details>
+<details><summary>It's slow on a huge mesh.</summary><p>Remesh time scales with the input size. Decimate a multi-million-triangle scan first, or be patient; progress is shown and Cancel stops it cleanly.</p></details>
+</section>
+
+<section id="compat"><h2><span class="ic">✓</span>Compatibility</h2>
+<table><tr><th>Blender</th><td>4.2 LTS through 5.2 LTS (developed and tested on 5.2)</td></tr>
+<tr><th>Platform</th><td>Windows x64 only</td></tr>
+<tr><th>Format</th><td>Blender Extension (.zip) with the engine bundled, installed from disk</td></tr>
+<tr><th>Internet</th><td>Not required. No data is collected; the add-on only writes temporary mesh files for the engine.</td></tr>
+<tr><th>License</th><td>Add-on: GPL-3.0-or-later. Engine: proprietary, with every third-party licence included in the package.</td></tr></table>
+</section>
+
+<section id="about" style="border-bottom:none"><h2><span class="ic">◇</span>About</h2>
+<p class="lead">NexTopo is made by Dawid Gerula, a 3D artist and QA analyst building precise, production-grade tools for 3D artists. Questions, or a mesh that defeats it? Send it over: <a href="mailto:dawidgerulapl@gmail.com">dawidgerulapl@gmail.com</a>.</p>
+<p><a href="https://www.linkedin.com/in/dawid-gerula/" target="_blank" rel="noopener">Connect on LinkedIn →</a></p>
+</section>
+</main>
+<footer>NexTopo 1.0.0 · © 2026 Dawid Gerula · Also by the author: <a href="https://dawczens.github.io/uvrectipack.github.io/">UV RectiPack</a></footer>
+</body></html>
