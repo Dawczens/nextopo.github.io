@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NexTopo - Quad Remesh, LOD &amp; Bake for Blender</title>
+<meta name="description" content="NexTopo for Blender: remesh messy models to clean quads, project onto a sculpt, build LOD chains and bake normal and AO maps part by part. Free version, one-time purchase, fully offline, Windows.">
+<meta property="og:title" content="NexTopo - Quad Remesh, LOD &amp; Bake for Blender">
+<meta property="og:description" content="Remesh messy models to quads, project onto a sculpt, build LOD chains and bake maps. Free version included.">
+<meta property="og:image" content="https://dawczens.github.io/nextopo.github.io/media/hero-suzanne.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0d10'/%3E%3Cpath d='M8 8h16v16H8z M8 16h16 M16 8v16' stroke='%234dd0e1' stroke-width='2.2' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d10;--bg2:#12151a;--card:#161a20;--line:#242a33;--ink:#e8eaed;--ink2:#9aa4b2;--acc:#4dd0e1;--acc2:#7c5cff;--ok:#5ee6a0}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,'Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+a{color:var(--acc)}kbd{font:600 .85em Inter,system-ui;padding:1px 7px;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;background:var(--card)}
+code{background:var(--card);border:1px solid var(--line);padding:1px 6px;border-radius:5px;overflow-wrap:anywhere}
+img{max-width:100%;height:auto;display:block;border-radius:14px;border:1px solid var(--line)}
+header{padding:64px 16px 44px;text-align:center;background:radial-gradient(circle at 20% 15%,rgba(124,92,255,.16),transparent 42%),radial-gradient(circle at 80% 5%,rgba(77,208,225,.13),transparent 42%)}
+.logo{font-size:clamp(2.6rem,7vw,4rem);font-weight:800;letter-spacing:-1.5px;margin:0}
+.logo span{background:linear-gradient(135deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+header p.tag{font-size:clamp(1.05rem,2.6vw,1.3rem);color:var(--ink2);margin:10px auto 22px;max-width:780px}
+.chips span{display:inline-block;margin:4px;padding:6px 16px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:.92rem}
+.chips span.free{border-color:var(--acc);color:var(--acc)}
+.cta{margin-top:26px}.cta a{display:inline-block;margin:6px;padding:12px 26px;border-radius:12px;font-weight:600;text-decoration:none}
+.cta .p{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0b0d10}.cta .s{border:1px solid var(--line);color:var(--ink)}
+.cta .s:hover{border-color:var(--acc)}
+.hero-media{max-width:960px;margin:36px auto 0}
+nav{position:sticky;top:0;z-index:5;background:rgba(11,13,16,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;padding:10px 16px;text-align:center}
+nav a{margin:0 10px;text-decoration:none;font-weight:600;font-size:.92rem;color:var(--ink2)}nav a:hover{color:var(--ink)}
+main{max-width:1120px;margin:0 auto;padding:0 16px 60px}
+h2{font-size:1.8rem;margin:0 0 8px;display:flex;gap:12px;align-items:center;letter-spacing:-.4px}h3{margin:18px 0 6px}
+.ic{display:inline-grid;place-items:center;flex:none;width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(77,208,225,.2),rgba(124,92,255,.2));color:var(--acc);font-size:1.25rem}
+section{scroll-margin-top:56px;padding:48px 0 8px;border-bottom:1px solid var(--line)}
+.lead{font-size:1.1rem;color:var(--ink2);max-width:860px}
+.media{display:grid;gap:16px;margin:18px 0}.media.m2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+figure{margin:0}video{width:100%;height:auto;border-radius:14px;border:1px solid var(--line);display:block;background:var(--bg2)}
+figcaption{font-size:.9rem;color:var(--ink2);margin-top:6px}
+figure.sq{max-width:620px;margin:0 auto}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
+table{width:100%;border-collapse:collapse;font-size:.95rem}th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}th{width:34%;color:var(--acc);font-weight:600}
+.ed th{width:auto}.ed td,.ed th{text-align:center}.ed td:first-child,.ed th:first-child{text-align:left}
+.note{background:var(--bg2);border-left:4px solid var(--acc);padding:10px 14px;border-radius:8px;color:var(--ink2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}.card h3{margin-top:0;color:var(--acc)}.card p{color:var(--ink2);margin:0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:22px}
+.steps a{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.steps a:hover{border-color:var(--acc)}.steps b{display:block;color:var(--acc);font-size:1.05rem}.steps span{color:var(--ink2);font-size:.92rem}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0}summary{font-weight:600;cursor:pointer}details p{color:var(--ink2)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:28px 0 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;color:var(--ink2)}.stat b{display:block;font-size:1.7rem;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+footer{text-align:center;padding:30px 16px;color:var(--ink2);font-size:.9rem}footer a{color:var(--ink2)}
+</style></head><body>
+<header>
+<h1 class="logo">Nex<span>Topo</span></h1>
+<p class="tag">Remesh messy models to clean quads, project onto a sculpt, build LOD chains and bake normal and AO maps. One panel in Blender, a one-time purchase, fully offline. Free version included.</p>
+<div class="chips"><span>Remesh</span><span>Project</span><span>Optimize + LODs</span><span>Bake</span><span class="free">Free version</span><span>Fully offline</span></div>
+<!-- Replace with the product page URL once the listing is live. -->
+<div class="cta"><a class="p" href="https://superhivemarket.com/search?search=nextopo">Get it on Superhive</a><a class="s" href="#editions">Free version</a><a class="s" href="#quick-start">Quick start</a></div>
+<figure class="hero-media"><video src="media/hero-suzanne.mp4" poster="media/hero-suzanne.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>A decimated triangle mesh on the left, the Flow result with Symmetry X on the right. One click, target 5,000.</figcaption></figure>
+</header>
+<nav><a href="#quick-start">Quick start</a><a href="#remesh">Remesh</a><a href="#symmetry">Symmetry</a><a href="#parts">Multi-part</a><a href="#project">Project</a><a href="#lods">Optimize + LODs</a><a href="#bake">Bake</a><a href="#workflow">Why NexTopo</a><a href="#editions">Editions</a><a href="#faq">FAQ</a><a href="#compat">Compatibility</a></nav>
+<main>
+<div class="stats">
+<div class="stat"><b>98.5 – 100 %</b>quads across our 13-model test set</div>
+<div class="stat"><b>0</b>new holes on that same test set</div>
+<div class="stat"><b>4 tools</b>Remesh · Project · LODs · Bake</div>
+<div class="stat"><b>4.2 – 5.2</b>Blender LTS versions · Windows x64</div>
+</div>
+<div class="steps">
+<a href="#remesh"><b>1 · Remesh</b><span>Clean quads from a sculpt, a scan or a game asset.</span></a>
+<a href="#project"><b>2 · Project</b><span>Fit the light mesh back onto the detailed one.</span></a>
+<a href="#lods"><b>3 · Optimize + LODs</b><span>A lighter mesh or a whole LOD chain in one click.</span></a>
+<a href="#bake"><b>4 · Bake</b><span>Normal, AO and colour from the detailed mesh, part by part.</span></a>
+</div>
+
+<section id="quick-start"><h2><span class="ic">▶</span>Quick start</h2>
+<div class="cols"><div><h3>Install</h3><ol><li>Download <code>nextopo-1.0.0-windows-x64.zip</code> (or <code>nextopo-free-1.0.0-windows-x64.zip</code>). Don't unzip it.</li><li>In Blender go to <b>Edit → Preferences → Get Extensions</b>, open the <b>▾</b> menu at the top right and choose <b>Install from Disk…</b></li><li>Pick the zip. The engine is inside it: nothing else to install, no path to set.</li></ol>
+<p class="note">The first time the engine runs, Windows SmartScreen may warn that the program is new and unsigned. Choose <b>More info → Run anyway</b>, once.</p></div>
+<div><h3>First remesh</h3><ol><li>Select a mesh in <b>Object Mode</b>.</li><li>Press <kbd>N</kbd> in the 3D Viewport and open the <b>NexTopo</b> tab.</li><li>Set <b>Target Quads</b> to roughly the density you want and click <b>Remesh</b>.</li><li>The result arrives as a preview. Click <b>Accept</b> to keep it or <b>Discard</b> to throw it away.</li></ol></div></div>
+<div class="media"><img src="media/panel-idle.png" alt="The NexTopo panel on the Remesh tab" loading="lazy" style="max-width:384px"></div>
+</section>
+
+<section id="remesh"><h2><span class="ic">⚡</span>Remesh: the one-click Flow engine</h2>
+<p class="lead">Flow, the default engine, lays quads along the shape of the surface at an even density. It chooses its own settings, so there is nothing to tune: set roughly how many quads you want and press Remesh. Dirty input is repaired first: non-manifold edges, flipped normals, near-duplicate vertices and small cracks.</p>
+<div class="media m2"><figure><video src="media/flow-katana.mp4" poster="media/flow-katana.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Inferno Kaen katana, target 5,000: a low-poly game asset rebuilt as even quads along the blade and the guard.</figcaption></figure>
+<figure><video src="media/flow-crowbar.mp4" poster="media/flow-crowbar.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Crowbar (Poly Haven, CC0), target 2,000: all quads, loops along the bar and around the claw.</figcaption></figure></div>
+<div class="cols"><div><h3>How to use</h3><ol><li>Select the mesh and set <b>Target Quads</b>.</li><li>Press <b>Remesh</b> and look at the preview.</li><li>Change the count and press <b>Remesh Again</b>, or <b>Accept</b>.</li></ol></div>
+<div><h3>Options</h3><table><tr><th>Target Quads</th><td>Roughly how many faces you want. Flow retries toward it on its own.</td></tr><tr><th>Engine</th><td><b>Flow</b> (default), or QuadriFlow / Feature-line for manual control (see <a href="#advanced">Advanced</a>).</td></tr><tr><th>Symmetry</th><td>Remesh about a local axis for an exactly mirrored result.</td></tr><tr><th>Preview Result</th><td>On by default. Off applies the result directly.</td></tr><tr><th>Use Modifiers</th><td>Remesh the mesh with its modifier stack applied.</td></tr></table></div></div>
+</section>
+
+<section id="symmetry"><h2><span class="ic">⇋</span>Symmetry</h2>
+<p class="lead">Pick an axis and the result is an exact mirror: one straight loop runs down the mirror line and the two halves weld into one mesh. If that seam does not weld cleanly, NexTopo runs again without the guide loop and tells you so.</p>
+<div class="media"><figure class="sq"><video src="media/turn-suzanne.mp4" poster="media/turn-suzanne.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Suzanne with Symmetry X, target 5,000.</figcaption></figure></div>
+</section>
+
+<section id="parts"><h2><span class="ic">⧉</span>Multi-part models, part by part</h2>
+<p class="lead">A prop is rarely one closed surface. Every separate piece gets its own remesh and its own share of the quad budget, so small parts such as buttons and straps come out as quads instead of being swallowed. Identical copies, such as a pair of eyes, get identical topology. On mechanical parts each piece may switch to the engine that keeps its edges best, but only when that result is sound.</p>
+<div class="media m2"><figure><video src="media/parts-gamepad.mp4" poster="media/parts-gamepad.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Gamepad (Poly Haven, CC0), target 3,000: body, buttons and cable, each on its own budget.</figcaption></figure>
+<figure><video src="media/turn-bracket.mp4" poster="media/turn-bracket.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Holed CAD bracket, target 2,000: flat faces, crisp edges, loops around both holes.</figcaption></figure></div>
+<p class="note">The count is a target, not a guarantee. On models with many small parts Flow may spend more quads than asked so those parts stay intact.</p>
+</section>
+
+<section id="project"><h2><span class="ic">◎</span>Project: fit one mesh onto another</h2>
+<p class="lead">Move the vertices of a light mesh onto a detailed one: a retopology onto the sculpt it was made over, or a remesh onto its original. With Subdivisions it subdivides and projects one level at a time to pick up finer detail. A vertex only goes to a surface that faces its way, so two lips or two close fingers do not swap, and a move that would fold a face is shortened or taken back.</p>
+<div class="media"><figure class="sq"><video src="media/project-horse.mp4" poster="media/project-horse.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>Horse statue (Poly Haven, CC0): the 2,841-face Flow result, then Project with one subdivision onto the 22,388-triangle original. The mane, eye and muscles come back.</figcaption></figure></div>
+<div class="cols"><div><h3>How to use</h3><ol><li>Select the light mesh and open the <b>Project</b> tab.</li><li>Pick the detailed mesh as <b>Source</b> (it is never changed).</li><li>Set <b>Subdivisions</b> (0 refits the mesh as a shape key) and press <b>Project</b>.</li></ol></div>
+<div><h3>Options</h3><table><tr><th>Max Distance</th><td>How far a vertex may travel; 0 picks 2 % of the source's size.</td></tr><tr><th>Pin Open Borders</th><td>Keeps the edge of a partial mesh fixed.</td></tr><tr><th>Influence</th><td>A vertex group: weight 0 stays, 1 moves fully.</td></tr></table></div></div>
+</section>
+
+<section id="lods"><h2><span class="ic">▤</span>Optimize + LODs</h2>
+<p class="lead">Make a lighter triangle copy of any mesh to a ratio or a triangle count, or press <b>Generate LODs</b> for a whole chain: <i>Name_LOD1</i>, <i>Name_LOD2</i>… in their own collection, with buttons to show one level at a time. Materials, colours and vertex groups carry over, so the rig still applies. Blender's own Decimate does the reduction underneath.</p>
+<div class="media"><figure><img src="media/lods-horse.jpg" alt="Four LOD levels of a horse statue, from 22,388 to 349 triangles" loading="lazy"><figcaption>Generate LODs, 3 levels at a 25 % step: 22,388 → 5,596 → 1,398 → 349 triangles.</figcaption></figure></div>
+</section>
+
+<section id="bake"><h2><span class="ic">◐</span>Bake: the detail back onto the light mesh</h2>
+<p class="lead">Bake <b>Base Color</b>, <b>Normal</b> and <b>AO</b> from the detailed mesh onto the light one's UV map with Cycles, wired into a copy of its material. Models made of separate parts bake part by part: each face reads only the piece it lies on, so a ray never lands on a neighbouring part across a gap.</p>
+<div class="media m2"><figure><video src="media/bake-horse.mp4" poster="media/bake-horse.jpg" autoplay loop muted playsinline preload="metadata"></video><figcaption>The 2,841-face Flow result, then the same mesh with the Normal and AO baked from the original.</figcaption></figure>
+<figure><img src="media/bake-strip.jpg" alt="Source, light mesh and light mesh with baked maps side by side" loading="lazy"><figcaption>Source, light mesh, light mesh + baked maps, under the same light.</figcaption></figure></div>
+<div class="cols"><div><h3>How to use</h3><ol><li>Select the detailed mesh, then the light one last, so it is active. (A remesh result bakes from its original on its own.)</li><li>Open the <b>Bake</b> tab, pick the maps and the size.</li><li>Press <b>Bake</b>. The original and its materials are never changed.</li></ol></div>
+<div><h3>Good to know</h3><ul><li>Normal maps are tangent space, OpenGL (+Y), as Blender, Unity and glTF read them. In Unreal, flip the green channel.</li><li>A mesh without UVs gets a Smart UV Project first.</li><li>Baking needs Cycles and blocks Blender until it finishes.</li></ul></div></div>
+</section>
+
+<section id="workflow"><h2><span class="ic">✔</span>Built not to get in your way</h2>
+<div class="grid">
+<div class="card"><h3>Runs outside Blender</h3><p>The solver is a separate program. A mesh that defeats it returns an error instead of taking your unsaved scene down with it.</p></div>
+<div class="card"><h3>Repair first</h3><p>Non-manifold edges, inconsistent normals, near-duplicate vertices and small cracks are repaired before the remesh, so real-world input works. Openings you modelled on purpose stay open.</p></div>
+<div class="card"><h3>Preview, then decide</h3><p>The original stays hidden under the preview. Accept keeps the result as a new object; Discard brings the original back.</p></div>
+<div class="card"><h3>Your data carried over</h3><p>Material slots, per-face material assignment and smooth/flat shading come across to the new mesh.</p></div>
+<div class="card"><h3>Repeatable</h3><p>The same mesh with the same settings gives the same result every time on your machine, however many CPU cores it uses.</p></div>
+<div class="card"><h3>Fully offline</h3><p>No account, no activation, no licence server. The add-on makes no network connections, and your meshes never leave your computer.</p></div>
+</div>
+</section>
+
+<section id="advanced"><h2><span class="ic">✎</span>Advanced: more control</h2>
+<p class="lead">Switch <b>Options → Engine</b> to <b>QuadriFlow</b> or <b>Feature-line</b> and you get the full set of controls: presets (Organic, Hard-surface, Scan Cleanup, Game-ready), hard-edge preservation with an adjustable angle and match-target refinement. Flow sets these itself.</p>
+</section>
+
+<section id="editions"><h2><span class="ic">＋</span>Free and full editions</h2>
+<p class="lead">Two downloads, no licence key, no activation, no expiry. <b>NexTopo Free</b> is the same add-on and the same engine with two limits. At or below 5,000 quads both produce byte-for-byte the same result.</p>
+<table class="ed"><tr><th></th><th>Free</th><th>Full</th></tr>
+<tr><td>Remesh output</td><td>up to 5,000 quads</td><td>unlimited</td></tr>
+<tr><td>Project target</td><td>up to 10,000 vertices</td><td>unlimited</td></tr>
+<tr><td>Optimize + LODs, Bake</td><td>✓</td><td>✓</td></tr>
+<tr><td>Repair, preview, symmetry, materials</td><td>✓</td><td>✓</td></tr>
+<tr><td>Commercial use of your results</td><td>✓</td><td>✓</td></tr></table>
+<p>Installing the full zip replaces the free one in place; your preferences are kept.</p>
+</section>
+
+<section id="faq"><h2><span class="ic">?</span>FAQ</h2>
+<details><summary>How is this different from Blender's built-in QuadriFlow remesh?</summary><p>The built-in remesher refuses a lot of real geometry: non-manifold input, inconsistent normals, near-duplicate vertices. NexTopo repairs the mesh first, remeshes each separate part on its own budget, previews the result before replacing anything and carries materials and shading across. Project, LODs and Bake then take the result the rest of the way to a game-ready asset.</p></details>
+<details><summary>Is it all quads?</summary><p>Almost: 98.5 to 100 % quads across our 13-model test set. The rest is a handful of other faces where the layout needs them.</p></details>
+<details><summary>Will my UVs survive?</summary><p>Plan to re-unwrap or re-bake for production. Bake gives the light mesh its own maps, and makes UVs with Smart UV Project when it has none. Materials and shading are carried over.</p></details>
+<details><summary>Does it need an internet connection?</summary><p>No: not to install, not to activate, not to run.</p></details>
+<details><summary>Is it a subscription?</summary><p>No. One-time purchase, perpetual, and you may use the results in commercial work.</p></details>
+<details><summary>macOS or Linux?</summary><p>Not in this release. Windows x64 only.</p></details>
+<details><summary>It's slow on a huge mesh.</summary><p>Remesh time scales with the input size. Decimate a multi-million-triangle scan first (the Optimize tab does that), or be patient; progress is shown and Cancel stops it cleanly.</p></details>
+</section>
+
+<section id="compat"><h2><span class="ic">✓</span>Compatibility</h2>
+<table><tr><th>Blender</th><td>4.2 LTS through 5.2 LTS (developed and tested on 5.2)</td></tr>
+<tr><th>Platform</th><td>Windows x64 only</td></tr>
+<tr><th>Format</th><td>Blender Extension (.zip) with the engine bundled, installed from disk</td></tr>
+<tr><th>Bake</th><td>Needs the Cycles render engine (built into Blender)</td></tr>
+<tr><th>Internet</th><td>Not required. No data is collected; the add-on only writes temporary mesh files for the engine.</td></tr>
+<tr><th>License</th><td>Add-on: GPL-3.0-or-later. Engine: proprietary, with every third-party licence included in the package.</td></tr></table>
+</section>
+
+<section id="about" style="border-bottom:none"><h2><span class="ic">◇</span>About</h2>
+<p class="lead">NexTopo is made by Dawid Gerula, a 3D artist and QA analyst building precise, production-grade tools for 3D artists. Questions, or a mesh that defeats it? Send it over: <a href="mailto:dawidgerulapl@gmail.com">dawidgerulapl@gmail.com</a>.</p>
+<p><a href="https://www.linkedin.com/in/dawid-gerula/" target="_blank" rel="noopener">Connect on LinkedIn →</a></p>
+<p class="note">Models on this page: Suzanne (Blender), Crowbar 01, Gamepad and Horse Statue 01 (Poly Haven, CC0), Inferno Kaen katana (the author's own), a CAD bracket made for testing.</p>
+</section>
+</main>
+<footer>NexTopo 1.0.0 · © 2026 Dawid Gerula · Also by the author: <a href="https://dawczens.github.io/uvrectipack.github.io/">UV RectiPack</a></footer>
+</body></html>
