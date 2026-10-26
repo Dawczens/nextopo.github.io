@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NexTopo user guide</title>
+<meta name="description" content="NexTopo user guide: install, the free and full editions, Remesh, Project, Optimize + LODs and Bake, every option, troubleshooting.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0d10'/%3E%3Cpath d='M8 8h16v16H8z M8 16h16 M16 8v16' stroke='%234dd0e1' stroke-width='2.2' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d10;--bg2:#12151a;--card:#161a20;--line:#242a33;--ink:#e8eaed;--ink2:#9aa4b2;--acc:#4dd0e1;--acc2:#7c5cff}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#0b0d10}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,'Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+header{padding:44px 16px 28px;text-align:center;background:radial-gradient(circle at 20% 15%,rgba(124,92,255,.16),transparent 42%),radial-gradient(circle at 80% 5%,rgba(77,208,225,.13),transparent 42%)}
+.logo{font-size:clamp(2.2rem,6vw,3.2rem);font-weight:800;letter-spacing:-1.2px;margin:0;color:var(--ink)}.logo span{color:var(--acc)}
+header p{color:var(--ink2);margin:8px auto 18px;max-width:680px}
+.cta a{display:inline-block;margin:5px;padding:10px 20px;border-radius:12px;font-weight:600}
+.cta .p{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0b0d10}.cta .s{border:1px solid var(--line);color:var(--ink)}
+.toc{position:sticky;top:0;z-index:5;background:rgba(11,13,16,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;padding:10px 16px;text-align:center}
+.toc a{margin:0 9px;font-weight:600;font-size:.9rem;color:var(--ink2)}.toc a:hover{color:var(--ink)}
+main{max-width:860px;margin:0 auto;padding:10px 16px 60px}
+h2{font-size:1.6rem;margin:44px 0 12px;padding-top:24px;border-top:1px solid var(--line);scroll-margin-top:56px;letter-spacing:-.3px}
+h3{color:var(--acc);font-size:1.12rem;margin:26px 0 8px;scroll-margin-top:56px}
+p,li{color:var(--ink2)}strong{color:var(--ink)}li{margin:5px 0}
+code{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:1px 6px;border-radius:5px;font-size:.88em;overflow-wrap:anywhere}
+.tbl{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.95rem;margin:8px 0 16px}th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}th{color:var(--acc)}
+hr{display:none}
+footer{text-align:center;padding:30px 16px;color:var(--ink2);font-size:.9rem}
+</style></head><body>
+<header><a href="./" class="logo">Nex<span>Topo</span></a>
+<p>User guide for NexTopo 1.0.0: install, the four tabs, every option, troubleshooting.</p>
+<div class="cta"><a class="p" href="https://github.com/Dawczens/nextopo.github.io/releases/latest">Download the free version</a><a class="s" href="https://youtu.be/ONph2mcMSu8">Watch the trailer</a><a class="s" href="./">Product page</a></div></header>
+<nav class="toc"><a href="#get-nextopo">Get NexTopo</a><a href="#install">Install</a><a href="#remesh">Remesh</a><a href="#project-fit-one-mesh-onto-another">Project</a><a href="#optimize-a-lighter-triangle-mesh-and-lods">Optimize</a><a href="#bake-colour-normals-and-ao-onto-a-lighter-mesh">Bake</a><a href="#troubleshooting">Troubleshooting</a><a href="#what-nextopo-does-with-your-data">What NexTopo does with your data</a></nav>
+<main>
+<h1 id="nextopo-1-0-0-user-guide">NexTopo 1.0.0: user guide</h1>
+<p>NexTopo is four tools in one Blender panel:</p>
+<ul><li><strong>Remesh</strong> turns a mesh into clean quad topology;</li><li><strong>Project</strong> fits a light mesh onto a detailed one;</li><li><strong>Optimize</strong> makes a lighter mesh or a chain of LODs;</li><li><strong>Bake</strong> puts the detailed mesh's colour, surface detail and occlusion back onto the light one.</li></ul>
+<p>Requires <strong>Windows (x64)</strong> and Blender <strong>4.2 LTS or newer</strong> (developed and tested on 5.2). macOS and Linux are not supported.</p>
+<p>Watch the 40-second trailer: <a href="https://youtu.be/ONph2mcMSu8">youtu.be/ONph2mcMSu8</a>.</p>
+<hr>
+<h2 id="get-nextopo">Get NexTopo</h2>
+<ul><li><strong>NexTopo (full):</strong> from the product page on Superhive. Your download is the zip <code>nextopo-&lt;version&gt;-windows-x64.zip</code>.</li><li><strong>NexTopo Free:</strong> from GitHub, at <a href="https://github.com/Dawczens/nextopo.github.io/releases/latest">github.com/Dawczens/nextopo.github.io/releases/latest</a>.<ul><li>That link always opens the newest free release, and every future free version is published there.</li><li>Download the zip <code>nextopo-free-&lt;version&gt;-windows-x64.zip</code> under <strong>Assets</strong>, not the "Source code" archives GitHub adds.</li></ul></li></ul>
+<h2 id="install">Install</h2>
+<ol><li>In Blender: <strong>Edit ▸ Preferences ▸ Get Extensions</strong>, open the <strong>▾</strong> menu at the top right and choose <strong>Install from Disk…</strong></li><li>Pick the zip you downloaded. <strong>Don't unzip it</strong>: Blender installs the extension from the zip itself.</li><li>Open the 3D viewport sidebar (<strong>N</strong> key) and pick the <strong>NexTopo</strong> tab.</li></ol>
+<p>To update, install the newer zip the same way; it replaces the old version and keeps your preferences.</p>
+<p>The engine is bundled inside the zip. Nothing else to install, and NexTopo never touches the network: no account, no activation, no phone-home.</p>
+<h3 id="free-and-full-editions">Free and full editions</h3>
+<p>There are two downloads (see Get NexTopo above). They are the same add-on; they differ only in the engine binary inside, and neither involves a licence key.</p>
+<div class="tbl"><table><tr><th></th><th>Free</th><th>Full</th></tr><tr><td>Remesh output</td><td>up to 5,000 quads</td><td>unlimited</td></tr><tr><td>Project target</td><td>up to 10,000 vertices</td><td>unlimited</td></tr><tr><td>Everything else (repair, presets, preview, materials, symmetry, Optimize and LODs, Bake)</td><td>yes</td><td>yes</td></tr></table></div>
+<p>At or below 5,000 quads both editions produce <strong>identical output</strong>: the cap changes what you may ask for, never how it is solved. Ask for more and the free edition remeshes at 5,000 and says so in the panel.</p>
+<p>Installing the full zip replaces the free one in place; your preferences are kept. Preferences ▸ Add-ons ▸ NexTopo shows which edition is installed.</p>
+<h3 id="windows-windows-protected-your-pc">Windows: "Windows protected your PC"</h3>
+<p>The first time the engine runs, Windows SmartScreen may show a blue warning because the executable is new and not yet code-signed. Click <strong>More info ▸ Run anyway</strong>. You will only see it once.</p>
+<p>If your organisation blocks unsigned executables outright, point NexTopo at your own copy of the engine: <strong>Preferences ▸ Add-ons ▸ NexTopo ▸ Engine Executable</strong>.</p>
+<hr>
+<h2 id="remesh">Remesh</h2>
+<ol><li>Select a mesh object in <strong>Object Mode</strong>.</li><li>Set <strong>Target Quads</strong> to roughly the density you want.</li><li>Press <strong>Remesh</strong>.</li></ol>
+<p>While the remesh runs, a card at the bottom of the viewport shows its progress (it hides when you turn the viewport's overlays off). <strong>Esc</strong> or <strong>Cancel</strong> stops it cleanly.</p>
+<p>The result arrives as a <strong>preview</strong>: the original is hidden and the new topology is shown in its place.</p>
+<ul><li><strong>Accept</strong> keeps the result as a new object and restores your original.</li><li><strong>Discard</strong> throws the result away and brings your original back.</li><li>Changing a setting and pressing <strong>Remesh Again</strong> replaces the preview, so you can iterate without piling up objects.</li></ul>
+<p>Turn off <strong>Preview Result</strong> if you would rather have the result applied directly.</p>
+<h3 id="engines">Engines</h3>
+<p><strong>Options ▸ Engine</strong> picks which remesher runs. You rarely need to change it.</p>
+<ul><li><strong>Flow</strong> <em>(default)</em>: quads laid along the shape at an even density.<ul><li>It chooses its own quality settings.</li><li>On a model made of several separate parts, each part is remeshed on its own budget. A part may use one of the other engines when that gives the sounder result.</li></ul></li><li><strong>QuadriFlow</strong> and <strong>Feature-line</strong>: the engines the presets and quality options steer. Switch to one of them when you want that control; the options appear under the engine.</li></ul>
+<h3 id="symmetry">Symmetry</h3>
+<p><strong>Options ▸ Symmetry</strong> remeshes about the chosen local axis for an exactly mirrored result. Under Flow one loop runs down the mirror line and the two halves weld into one mesh. <strong>Keep Half</strong> picks which side's detail survives (Automatic picks the denser side). The model has to actually straddle the plane.</p>
+<p>If the seam does not weld cleanly, the remesh runs again without the guide loop and the panel says so.</p>
+<h3 id="presets-and-quality-options-quadriflow-and-feature-line">Presets and quality options (QuadriFlow and Feature-line)</h3>
+<p>The <strong>Preset</strong> dropdown sets the quality options in one go. Editing any of them switches the dropdown to <strong>Custom</strong>, so the label never lies about what is set. Under Flow only the target count of <strong>Game-ready</strong> applies.</p>
+<div class="tbl"><table><tr><th>Preset</th><th>Use it for</th></tr><tr><td><strong>Organic / Sculpt</strong></td><td>Characters, creatures, sculpts. Even quad flow, no hard-edge detection.</td></tr><tr><td><strong>Hard-surface / CAD</strong></td><td>Mechanical parts, props, anything with chamfers or crisp feature edges.</td></tr><tr><td><strong>Scan Cleanup</strong></td><td>Photogrammetry and 3D-scan output: dirty, noisy, non-manifold input.</td></tr><tr><td><strong>Game-ready / Low-poly</strong></td><td>A lighter result at a low target count.</td></tr></table></div>
+<ul><li><strong>Optimize Layout</strong> <em>(on)</em>: improves quad shape and reduces irregular vertices after remeshing.</li><li><strong>Keep Hard Edges</strong> <em>(on, 45°)</em>: finds feature edges by how sharply the surface bends and runs the flow along them.<ul><li>On tiny, dense features (fine gear teeth, heavy scan noise) it can over-constrain the flow and fold quads. If the result looks tangled, turn it off or raise the angle.</li></ul></li><li><strong>Auto Detail</strong> <em>(off)</em>: more quads where the surface curves. Costs 50-130 % more time.</li><li><strong>Match Target</strong> <em>(off)</em>: re-solves until the face count lands close to what you asked for, about 2-3× slower.</li><li><strong>Repair Folds</strong> <em>(on)</em>: relaxes folded quads back onto the surface. Cheap; leave it on.</li><li><strong>Use Modifiers</strong> <em>(on)</em>: remeshes the mesh with its modifiers applied.</li></ul>
+<p><strong>Verify Settings</strong> measures the model and suggests a preset, Symmetry or Thin Feature Detail. It shows the measurements first, so you can disagree with the reasoning.</p>
+<h3 id="what-survives-a-remesh">What survives a remesh</h3>
+<p>A remesh replaces the topology outright, so anything attached to the old vertices is carried across:</p>
+<ul><li><strong>Materials and shading</strong>: every slot, and per-face assignment from the nearest source face.</li><li><strong>Vertex groups</strong>: interpolated, so rig weights survive. Armature modifiers and an armature parent come across too.</li><li><strong>Colour attributes</strong> and <strong>shape keys</strong> (resampled, keeping names, values and slider ranges).</li><li><strong>UV maps</strong> are carried approximately. Plan to re-unwrap, or bake onto the result (see Bake), for production texturing.</li></ul>
+<h3 id="reading-the-result-panel">Reading the result panel</h3>
+<p>After a remesh the panel reports what actually arrived. Rows only appear when they have something to say:</p>
+<ul><li><strong>faces</strong>: how big the result is, and how far off the target.</li><li><strong>inverted</strong>: folded quads, from QuadriFlow or Feature-line.</li><li><strong>new boundary edges / new holes</strong>: the remesh tore the surface open. Raise the target count; if Symmetry is on, try turning it off.</li><li><strong>open edges (input was open)</strong>: the model was already open there. Not damage.</li><li><strong>oversized edges</strong>: stray geometry, usually a loose or distant part in the source.</li></ul>
+<hr>
+<h2 id="project-fit-one-mesh-onto-another">Project: fit one mesh onto another</h2>
+<p>The <strong>Project</strong> tab moves the vertices of the active mesh onto another mesh's surface: a retopology onto the sculpt it was made over, a remesh onto its original, or a low-poly onto a scan. Pick the <strong>Source</strong> (it is never changed) and press <strong>Project</strong>.</p>
+<ul><li><strong>Subdivisions 0</strong> (Refit) moves the mesh's own vertices and changes nothing else. The result is a shape key, <em>NexTopo Project</em>, at full strength: lower it to blend back, delete it to undo.</li><li><strong>Subdivisions 1-4</strong> make a copy, subdivide it one level at a time and project after each level, to pick up finer detail.<ul><li>A level that cannot be projected is dropped, and the copy keeps the last good one.</li><li>With Preview on it arrives as a preview: Accept or Discard it like a remesh.</li></ul></li><li><strong>Max Distance</strong> is how far a vertex may travel. 0 picks 2 % of the source's size. A vertex with no surface facing its way within that distance stays where it is.</li><li><strong>Pin Open Borders</strong> keeps the edge of a partial mesh fixed. <strong>Influence</strong> takes a vertex group: weight 0 stays, 1 moves fully.</li></ul>
+<p>A vertex goes only to a surface that faces the same way, so the two sides of a thin part, two lips or two close fingers do not swap. A move that would fold a face is shortened or taken back. Projection cannot add detail the mesh has no vertices for: subdivide, or bake a normal map.</p>
+<p>The result row counts the vertices projected and lists any that found no surface, were ambiguous or followed their neighbours. The per-vertex outcome is stored on the mesh as the attribute <em>nextopo_project_status</em>.</p>
+<hr>
+<h2 id="optimize-a-lighter-triangle-mesh-and-lods">Optimize: a lighter triangle mesh, and LODs</h2>
+<p>The <strong>Optimize</strong> tab makes a lighter copy of the active mesh, all triangles, with Blender's own Decimate (Collapse) underneath. Set the <strong>Target</strong> as a share of the mesh's triangles (<strong>Ratio</strong>) or as a <strong>Triangles</strong> count, and press <strong>Optimize</strong>. With Preview on, the result arrives as a preview.</p>
+<ul><li><strong>Colours, materials and vertex groups</strong> carry over, so the original's rig still applies.</li><li><strong>Keep Borders Exact</strong> leaves the vertices on open borders where they are.</li><li><strong>Use Modifiers</strong> works on the mesh with its modifiers applied.</li><li>Shape keys and custom split normals do not carry over, and a very small part can be decimated away. The result row says when either happened.</li></ul>
+<p><strong>LODs.</strong> Set <strong>Levels</strong> and <strong>Step</strong> (each level keeps that share of the one before) and press <strong>Generate LODs</strong>.</p>
+<ul><li>The levels are made from the original, as <em>Name_LOD1</em>, <em>Name_LOD2</em>… in a collection <em>Name_LODs</em>, all hidden.</li><li>The <strong>Show</strong> buttons display one level at a time (LOD0 is the original).</li><li>Generating again replaces the previous levels; a copy you made of a level is left alone.</li></ul>
+<hr>
+<h2 id="bake-colour-normals-and-ao-onto-a-lighter-mesh">Bake: colour, normals and AO onto a lighter mesh</h2>
+<p>The <strong>Bake</strong> tab renders a detailed mesh onto a lighter one's UV map with Cycles, one new image per map. Which mesh bakes onto which follows Blender's <em>selected to active</em>: select the detailed mesh, then the light one last, so it is active. With nothing else selected, a Remesh, Optimize or Project result bakes from its original. The tab names both before you press <strong>Bake</strong>.</p>
+<ul><li><strong>Base Color</strong>: the original's surface colour, textures and plain colours alike, connected to the material's Base Color.</li><li><strong>Normal</strong>: tangent space, OpenGL convention (+Y, as Blender, Unity and glTF read it), connected through a Normal Map node. Unreal Engine expects DirectX (−Y): tick <em>Flip Green Channel</em> on the texture there.</li><li><strong>AO</strong>: ambient occlusion from the original alone, reaching a tenth of the mesh's size. It is left in the material unconnected (the Principled BSDF has no occlusion input); connect it in your exporter or engine.</li><li><strong>Size</strong>: each image's width and height. <em>Match Source</em> uses the largest texture on the original, or 2048.</li></ul>
+<p><strong>What the bake changes:</strong></p>
+<ul><li>The original and its materials are never changed. Each material on the light mesh is replaced by a copy (<em>Name_baked</em>) that reads the new images. Baking again reuses that copy.</li><li>A mesh without a UV map gets a Smart UV Project first.</li><li>A mesh with quads gets a <em>NexTopo Triangulate</em> modifier before its normal map, so the map matches the triangles you export. Export with modifiers applied (the default in FBX and glTF), or apply it.</li><li>Baking blocks Blender until it finishes; AO takes longest.</li></ul>
+<p><strong>Models made of parts bake part by part.</strong> When the detailed mesh is several separate pieces, each face of the light mesh reads only the piece it lies on, so a ray never lands on a neighbouring piece across a gap. Every piece still shades the occlusion. The result row says how many passes it took.</p>
+<p>If a map fails, the maps before it are kept and the result row says where it stopped. If the first one fails, nothing is left behind.</p>
+<p><strong>Bake Base Color</strong> on the Remesh tab is the one-click version for a fresh remesh result.</p>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p><strong>"NexTopo engine binary not found"</strong> The install was blocked or incomplete. Reinstall the zip, or set the engine path in the add-on preferences.</p>
+<p><strong>The face count is off from the target</strong></p>
+<ul><li>Every remesher treats the target as approximate. Flow retries toward it on its own, and on a model of many parts it may spend more quads to keep small parts intact.</li><li>On QuadriFlow or Feature-line, turn on <strong>Match Target</strong>.</li></ul>
+<p><strong>The result has folded quads (QuadriFlow / Feature-line)</strong> Turn off <strong>Keep Hard Edges</strong>, or raise its angle, and keep <strong>Repair Folds</strong> on.</p>
+<p><strong>It is slow on a huge mesh</strong> Remesh time scales with the <em>input</em> size. Thin a multi-million-triangle scan with <strong>Optimize</strong> first, or be patient.</p>
+<p><strong>The result looks blocky in the viewport</strong> That is flat shading on a low target count. Raise Target Quads, or right-click ▸ Shade Smooth.</p>
+<p><strong>Dark spots in a baked map</strong> The light mesh covers a place where the detailed mesh is open or intersects itself (a foot sunk into a base). Close or separate it in the detailed mesh, or paint over the spot.</p>
+<hr>
+<h2 id="what-nextopo-does-with-your-data">What NexTopo does with your data</h2>
+<p>Nothing leaves your machine. The add-on writes the mesh to a temporary folder, runs the engine there as a separate program, reads the result back and deletes the folder. There is no network access anywhere in the product.</p>
+</main>
+<footer>NexTopo 1.0.0 · © 2026 Dawid Gerula · <a href="./">Product page</a> · <a href="https://github.com/Dawczens/nextopo.github.io/releases/latest">Free version</a> · <a href="mailto:dawidgerulapl@gmail.com">dawidgerulapl@gmail.com</a></footer>
+</body></html>
